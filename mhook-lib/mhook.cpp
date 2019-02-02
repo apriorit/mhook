@@ -1415,14 +1415,14 @@ int Mhook_SetHookEx(HOOK_INFO* hooks, int hookCount)
 }
 
 //=========================================================================
-BOOL Mhook_SetHook(PVOID *ppSystemFunction, PVOID pHookFunction) 
+BOOL Mhook_SetHook(PVOID pSystemFunction, PVOID pHookFunction) 
 {
-    HOOK_INFO hook = { ppSystemFunction, pHookFunction };
+    HOOK_INFO hook = { pSystemFunction, pHookFunction };
     return Mhook_SetHookEx(&hook, 1) == 1;
 }
 
 //=========================================================================
-int Mhook_UnhookEx(PVOID** hooks, int hookCount)
+int Mhook_UnhookEx(PVOID* hooks, int hookCount)
 {
     ODPRINTF((L"mhooks: Mhook_UnhookEx: %d hooks to unhook", hookCount));
     int result = 0;
@@ -1440,7 +1440,7 @@ int Mhook_UnhookEx(PVOID** hooks, int hookCount)
 
     for (int idx = 0; idx < hookCount; idx++)
     {
-        hookCtx[idx].pSystemFunction = *hooks[idx];
+        hookCtx[idx].pSystemFunction = hooks[idx];
         // get the trampoline structure that corresponds to our function
         hookCtx[idx].pTrampoline = TrampolineGet((PBYTE)hookCtx[idx].pSystemFunction);
 
@@ -1485,10 +1485,10 @@ int Mhook_UnhookEx(PVOID** hooks, int hookCount)
                 VirtualProtect(hookCtx[idx].pTrampoline->pSystemFunction, hookCtx[idx].pTrampoline->cbOverwrittenCode, dwOldProtectSystemFunction, &dwOldProtectSystemFunction);
 
                 // return the original function pointer
-                *hooks[idx] = hookCtx[idx].pTrampoline->pSystemFunction;
+                hooks[idx] = hookCtx[idx].pTrampoline->pSystemFunction;
                 result += 1;
 
-                ODPRINTF((L"mhooks: Mhook_UnhookEx: sysfunc: %p", *hooks[idx]));
+                ODPRINTF((L"mhooks: Mhook_UnhookEx: sysfunc: %p", hooks[idx]));
 
                 // free the trampoline while not really discarding it from memory
                 TrampolineFree(hookCtx[idx].pTrampoline, false);
@@ -1514,7 +1514,7 @@ int Mhook_UnhookEx(PVOID** hooks, int hookCount)
 }
 
 //=========================================================================
-BOOL Mhook_Unhook(PVOID *ppHookedFunction) 
+BOOL Mhook_Unhook(PVOID pHookedFunction) 
 {
-    return Mhook_UnhookEx(&ppHookedFunction, 1) == 1;
+    return Mhook_UnhookEx(&pHookedFunction, 1) == 1;
 }
