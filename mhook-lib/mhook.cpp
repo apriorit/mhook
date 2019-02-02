@@ -1216,7 +1216,7 @@ int Mhook_SetHookEx(HOOK_INFO* hooks, int hookCount)
 
     for (int idx = 0; idx < hookCount; idx++)
     {
-        hookCtx[idx].pSystemFunction = *hooks[idx].ppSystemFunction;
+        hookCtx[idx].pSystemFunction = hooks[idx].pSystemFunction;
         hookCtx[idx].pHookFunction = hooks[idx].pHookFunction;
         hookCtx[idx].pTrampoline = NULL;
         hookCtx[idx].dwInstructionLength = 0;
@@ -1365,7 +1365,7 @@ int Mhook_SetHookEx(HOOK_INFO* hooks, int hookCount)
                         {
                             // this is what the application will use as the entry point
                             // to the "original" unhooked function.
-                            *hooks[i].ppSystemFunction = hookCtx[i].pTrampoline->codeTrampoline;
+                            hooks[i].pSystemFunction = hookCtx[i].pTrampoline->codeTrampoline;
                         }
 
                         // flush instruction cache and restore original protection

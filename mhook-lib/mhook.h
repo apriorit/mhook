@@ -26,7 +26,7 @@
 
 struct HOOK_INFO
 {
-    PVOID *ppSystemFunction;    // pointer to pointer to function to be hooked
+    PVOID pSystemFunction;      // pointer to function to be hooked
     PVOID pHookFunction;        // hook function
 };
 
