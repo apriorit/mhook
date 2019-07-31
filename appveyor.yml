@@ -4,6 +4,8 @@ configuration:
 
 environment:
   matrix:
+    - generator: "Visual Studio 15 2017"
+    - generator: "Visual Studio 15 2017 Win64"
     - generator: "Visual Studio 14 2015"
     - generator: "Visual Studio 14 2015 Win64"
     - generator: "Visual Studio 10 2010"
@@ -20,3 +22,4 @@ before_build:
 build_script:
   - set CMAKE_BUILD_FLAGS=--config %configuration% -- /m /v:m
   - cmake --build build %CMAKE_BUILD_FLAGS%
+  
