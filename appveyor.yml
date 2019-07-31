@@ -4,11 +4,8 @@ configuration:
 
 environment:
   matrix:
-    - generator: "Visual Studio 14 2017 Win64"
-    - generator: "Visual Studio 14 2015"
-    - generator: "Visual Studio 14 2015 Win64"
-    - generator: "Visual Studio 10 2010"
-    - generator: "Visual Studio 10 2010 Win64"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - generator: "Visual Studio 14 2017"
 
 matrix:
   fast_finish: true
