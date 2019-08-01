@@ -1,4 +1,4 @@
-  # - Visual Studio 2010
+
 
 configuration:
   - Debug
@@ -6,18 +6,19 @@ configuration:
 
 image: 
 - Visual Studio 2017
-- Visual Studio 2015
+# - Visual Studio 2015
+# - Visual Studio 2010
 
 environment:
   matrix:
-      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          generator: "Visual Studio 15 2017 Win64"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      generator: "Visual Studio 15 2017 Win64"
     # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      # generator: "Visual Studio 15 2017"
+    #   generator: "Visual Studio 15 2017"
     # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    # - generator: "Visual Studio 14 2015"
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-       generator: "Visual Studio 14 2015 Win64"
+    #   generator: "Visual Studio 14 2015"
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    #   generator: "Visual Studio 14 2015 Win64"
     # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2010
     #   generator: "Visual Studio 10 2010"
     # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2010
