@@ -2,11 +2,6 @@ configuration:
   - Debug
   - Release
 
-#image: 
- #- Visual Studio 2017
- #- Visual Studio 2015
- #- Visual Studio 2010
-
 environment:
   matrix:
     - generator: "Visual Studio 10 2010 Win64"
