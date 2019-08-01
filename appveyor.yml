@@ -2,10 +2,10 @@ configuration:
   - Debug
   - Release
 
-image: 
- - Visual Studio 2017
- - Visual Studio 2015
- - Visual Studio 2010
+#image: 
+ #- Visual Studio 2017
+ #- Visual Studio 2015
+ #- Visual Studio 2010
 
 environment:
   matrix:
