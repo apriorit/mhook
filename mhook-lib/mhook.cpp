@@ -475,6 +475,7 @@ static MHOOKS_TRAMPOLINE* BlockAlloc(PBYTE pSystemFunction, PBYTE pbLower, PBYTE
         ODPRINTF((L"mhooks: BlockAlloc: Looking at address %p", pbAlloc));
         if (!VirtualQuery(pbAlloc, &mbi, sizeof(mbi)))
             break;
+
         // free & large enough?
         if (mbi.State == MEM_FREE && mbi.RegionSize >= (unsigned)cAllocSize) 
         {
@@ -509,7 +510,35 @@ static MHOOKS_TRAMPOLINE* BlockAlloc(PBYTE pSystemFunction, PBYTE pbLower, PBYTE
         ptrdiff_t bytesToOffset = (cAllocSize * (loopCount + 1) * ((loopCount % 2 == 0) ? -1 : 1));
         pbAlloc = pbAlloc + bytesToOffset;
     }
-    
+
+    // Fallback: Allocate a new block at a 'random' address rather than returning null.
+    if (!pRetVal)
+    {
+        pRetVal = (MHOOKS_TRAMPOLINE*)VirtualAlloc(NULL, cAllocSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+        if (pRetVal)
+        {
+            size_t trampolineCount = cAllocSize / sizeof(MHOOKS_TRAMPOLINE);
+            ODPRINTF((L"mhooks: BlockAlloc: Fallback-allocated block at %p as %d trampolines", pRetVal, trampolineCount));
+
+            pRetVal[0].pPrevTrampoline = NULL;
+            pRetVal[0].pNextTrampoline = &pRetVal[1];
+
+            // prepare them by having them point down the line at the next entry.
+            for (size_t s = 1; s < trampolineCount; ++s)
+            {
+                pRetVal[s].pPrevTrampoline = &pRetVal[s - 1];
+                pRetVal[s].pNextTrampoline = &pRetVal[s + 1];
+            }
+
+            // last entry points to the current head of the free list
+            pRetVal[trampolineCount - 1].pNextTrampoline = g_pFreeList;
+            if (g_pFreeList)
+            {
+                g_pFreeList->pPrevTrampoline = &pRetVal[trampolineCount - 1];
+            }
+        }
+    }
+
     return pRetVal;
 }
 
